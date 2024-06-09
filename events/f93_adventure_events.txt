@@ -158,7 +158,13 @@ country_event = {
 		}
 	}
 	immediate = {
+		random_owned_leader = {
+			limit = {
+				has_leader_flag = f93_went_on_an_adventure_as_governor
+				NOT = { has_leader_flag = f93_is_on_adventure }
+			}
 		remove_leader_flag = f93_went_on_an_adventure_as_governor
+		}
 	}
 }
 # Adventure end preparation
@@ -174,12 +180,12 @@ country_event = {
 		}
 	}
 	immediate = {
-		remove_leader_flag = f93_went_on_an_adventure
 		random_owned_leader = {
 			limit = {
 				has_leader_flag = f93_went_on_an_adventure
 				NOT = { has_leader_flag = f93_is_on_adventure }
 			}
+			remove_leader_flag = f93_went_on_an_adventure
 			locked_random_list = {
 				5 = {
 					leader_event = { id = f93_adventure.96 }
@@ -195,7 +201,7 @@ country_event = {
 				}
 			}
 			if = { limit = { planet = { exists = this } } planet = { planet_event = { id = f93_adventure.4 } } }
-			if = { limit = { fleet = { exists = this } } planet = { fleet_event = { id = f93_adventure.5 } } }
+			if = { limit = { fleet = { exists = this } } fleet = { fleet_event = { id = f93_adventure.5 } } }
 		}
 	}
 }
@@ -289,7 +295,7 @@ leader_event = {
 				else = { add_age = -5 }
 			}
 			2 = {
-				if = { limit = { NOT = { has_trait = leader_trait_psioni } } add_trait = leader_trait_psioni }
+				if = { limit = { NOT = { has_trait = leader_trait_psionic } } add_trait = leader_trait_psionic }
 				else = { add_age = -5 }
 			}
 			2 = {
@@ -302,12 +308,12 @@ leader_event = {
 			}
 			2 = {
 				if = { limit = { NOT = { has_trait = leader_trait_resilient } } add_trait = leader_trait_resilient }
-				if = { limit = { has_trait = leader_trait_resilient } remove_trait = leader_trait_resilient add_trait = leader_trait_resilient2 }
+				if = { limit = { has_trait = leader_trait_resilient } remove_trait = leader_trait_resilient add_trait = leader_trait_resilient_2 }
 				else = { add_age = -5 }
 			}
 			1 = {
 				if = { limit = { NOT = { has_trait = leader_trait_eager } } add_trait = leader_trait_eager }
-				if = { limit = { has_trait = leader_trait_eager } remove_trait = leader_trait_eager add_trait = leader_trait_eager2 }
+				if = { limit = { has_trait = leader_trait_eager } remove_trait = leader_trait_eager add_trait = leader_trait_eager_2 }
 				else = { add_age = -5 }
 			}
 			5 = {
@@ -357,13 +363,19 @@ leader_event = {
 					}
 				}
 			}
-			10 = {
+			1000 = {
 				owner = {
-					create_army_transport = {
-						army_type = xenomorph_army
-					}
-					create_army_transport = {
-						army_type = xenomorph_army
+					create_fleet = {
+						effect = {
+							set_location = owner.capital_scope
+							set_owner = owner
+							create_army_transport = {
+								army_type = xenomorph_army
+							}
+							create_army_transport = {
+								army_type = xenomorph_army
+							}
+						}
 					}
 				}
 			}
