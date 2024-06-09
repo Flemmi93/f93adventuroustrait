@@ -145,7 +145,7 @@ fleet_event = {
 	}
 }
 
-# Adventure end preparation for governor adventure
+# Adventure end preparation for governor adventure, nnot finished yet
 country_event = {
 	id = f93_adventure.94
 	hide_window = yes
@@ -233,7 +233,7 @@ leader_event = {
 		name = OK
 	}
 }
-# Adventure has ended in failiour
+# Adventure has ended in failur
 leader_event = {
 	id = f93_adventure.98
 	title = f93_adventure_timer.98.name
@@ -257,7 +257,7 @@ leader_event = {
 		locked_random_list = {
 			# 20% to get EXP
 			# 10% to get trait
-			# 5% to find rejuvination
+			# 5% to find rejuvenation
 			# 40% to find unity/research
 			# 15% to find trait
 			# 10% chance to find 2 Xenomorph Armies
