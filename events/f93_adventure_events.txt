@@ -22,22 +22,14 @@ country_event = {
 		NOT = { has_country_flag = f93_recent_adventure }
 		is_ai = no
 		any_owned_leader = {
-			OR = {
-				has_trait = leader_trait_adventurous_spirit
-				has_trait = leader_trait_adventurous_spirit_2
-				has_trait = leader_trait_adventurous_spirit_3
-			}
+			has_trait_tier1or2or3 = leader_trait_adventurous_spirit
 		}
 	}
 	immediate = {
 		random_owned_leader = {
 			limit = {
 				is_councilor = no
-				OR = {
-					has_trait = leader_trait_adventurous_spirit
-					has_trait = leader_trait_adventurous_spirit_2
-					has_trait = leader_trait_adventurous_spirit_3
-				}
+				has_trait_tier1or2or3 = leader_trait_adventurous_spirit
 			}
 			set_variable_to_random_value = { which = f93_adventure_timer min = 270 max = 1080 rounded = yes } #between 9 months and 3 years
 			save_event_target_as = adventure_seeker
@@ -73,11 +65,7 @@ planet_event = {
 	trigger = {
 		owner = { NOT = { has_country_flag = f93_recent_adventure } is_ai = no }
 		leader = {
-			OR = {
-				has_trait = leader_trait_adventurous_spirit
-				has_trait = leader_trait_adventurous_spirit_2
-				has_trait = leader_trait_adventurous_spirit_3
-			}
+			has_trait_tier1or2or3 = leader_trait_adventurous_spirit
 		}
 	}
 	immediate = {
@@ -145,7 +133,7 @@ fleet_event = {
 	}
 }
 
-# Adventure end preparation for governor adventure, nnot finished yet
+# Adventure end preparation for governor adventure, not finished yet
 country_event = {
 	id = f93_adventure.94
 	hide_window = yes
