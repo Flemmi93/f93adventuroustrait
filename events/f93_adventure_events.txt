@@ -22,6 +22,7 @@ country_event = {
 		NOT = { has_country_flag = f93_recent_adventure }
 		is_ai = no
 		any_owned_leader = {
+			is_councilor = no
 			has_trait_tier1or2or3 = leader_trait_adventurous_spirit
 		}
 	}
@@ -43,8 +44,8 @@ country_event = {
 			event_target:adventure_seeker = {
 				set_cooldown = f93_adventure_timer
 				unassign_leader = this
-				set_leader_flag = f93_went_on_an_adventure
-				set_timed_leader_flag = { flag = f93_is_on_adventure days = f93_adventure_timer }
+				set_leader_flag = f93_went_on_an_adventure # This flag is used at the end to know when a leader that went adventuring has returned. (event f93_adventure.95)
+				set_timed_leader_flag = { flag = f93_is_on_adventure days = f93_adventure_timer } # This flag marks a leader as being on the adventure.
 			}
 			set_timed_country_flag = { flag = f93_recent_adventure days = 1800 }
 		}
@@ -65,6 +66,7 @@ planet_event = {
 	trigger = {
 		owner = { NOT = { has_country_flag = f93_recent_adventure } is_ai = no }
 		leader = {
+			is_councilor = no # by removing this line Governors who are also Councilors will be able to go on an adventure.
 			has_trait_tier1or2or3 = leader_trait_adventurous_spirit
 		}
 	}
@@ -156,15 +158,15 @@ country_event = {
 	}
 }
 # Adventure end preparation
-country_event = {
+country_event = { # is called monthly
 	id = f93_adventure.95
 	hide_window = yes
 	is_triggered_only = yes
 	trigger = {
 		is_ai = no
 		any_owned_leader = {
-			has_leader_flag = f93_went_on_an_adventure
-			NOT = { has_leader_flag = f93_is_on_adventure }
+			has_leader_flag = f93_went_on_an_adventure # is adventung leader
+			NOT = { has_leader_flag = f93_is_on_adventure } # has return within the last month from adventuring
 		}
 	}
 	immediate = {
