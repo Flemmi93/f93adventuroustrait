@@ -266,7 +266,6 @@ leader_event = {
 			# 5% to find rejuvenation
 			# 40% to find unity/research
 			# 15% to find trait
-			# 10% chance to find 2 Xenomorph Armies
 			1 = {
 				add_skill = 1
 			}
@@ -360,22 +359,6 @@ leader_event = {
 						value = @tier2researchreward
 						min = @tier2researchmin
 						max = @tier2researchmax
-					}
-				}
-			}
-			1000 = {
-				owner = {
-					create_fleet = {
-						effect = {
-							set_location = owner.capital_scope
-							set_owner = owner
-							create_army_transport = {
-								army_type = xenomorph_army
-							}
-							create_army_transport = {
-								army_type = xenomorph_army
-							}
-						}
 					}
 				}
 			}
