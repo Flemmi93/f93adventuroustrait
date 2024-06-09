@@ -18,6 +18,7 @@ country_event = {
 	desc = f93_adventure.1.desc
 	picture = GFX_evt_bribery
 	is_triggered_only = yes
+	mean_time_to_happen = { months = 6 }
 	trigger = {
 		NOT = { has_country_flag = f93_recent_adventure }
 		is_ai = no
@@ -63,6 +64,7 @@ planet_event = {
 	desc = f93_adventure.1.desc
 	picture = GFX_evt_bribery
 	is_triggered_only = yes
+	mean_time_to_happen = { months = 6 }
 	trigger = {
 		owner = { NOT = { has_country_flag = f93_recent_adventure } is_ai = no }
 		leader = {

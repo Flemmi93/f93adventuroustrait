@@ -9,6 +9,8 @@ on_leader_unassigned = {
 
 on_monthly_pulse_country = {
 	events = {
+		f93_adventure.1
+		f93_adventure.2
 		f93_adventure.94
 		f93_adventure.95
 	}
