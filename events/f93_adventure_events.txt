@@ -1,0 +1,372 @@
+# Adventurous Leader goes Adventuring
+
+# With some random chance (every year) non-councilor Leaders with this trait can ask for your approval to embark on expedition.
+
+# If you approve, they will leave their post for 9 months ~ 3 years and when they return... They can revive random amount of expirience, leader trait, bring something of interest, tech option or research point for example, or simple resource cache.
+
+# If you didn't approve, well, they will be okay. At lest they aren't dealing with all this politics and bureaucracy like those guys in Council.
+
+# Adventurers-Governors, when allowed to embark on expedition, wouldn't leave their post, however, you wouldn't be able to reassign them for the duration of the expedition. Planetary expedition outcomes additionally influenced by planet class, unique features and modifiers.
+# Ecumenopolice and Habitat can not have expeditions.
+
+namespace = f93_adventure
+
+#A Leader goes on a Adventure away from their posts, includes governors
+country_event = {
+	id = f93_adventure.1
+	title = f93_adventure.1.name
+	desc = f93_adventure.1.desc
+	picture = GFX_evt_bribery
+	is_triggered_only = yes
+	trigger = {
+		NOT = { has_country_flag = f93_recent_adventure }
+		is_ai = no
+		any_owned_leader = {
+			OR = {
+				has_trait = leader_trait_adventurous_spirit
+				has_trait = leader_trait_adventurous_spirit_2
+				has_trait = leader_trait_adventurous_spirit_3
+			}
+		}
+	}
+	immediate = {
+		random_owned_leader = {
+			limit = {
+				is_councilor = no
+				OR = {
+					has_trait = leader_trait_adventurous_spirit
+					has_trait = leader_trait_adventurous_spirit_2
+					has_trait = leader_trait_adventurous_spirit_3
+				}
+			}
+			set_variable_to_random_value = { which = f93_adventure_timer min = 270 max = 1080 rounded = yes } #between 9 months and 3 years
+			save_event_target_as = adventure_seeker
+		}
+	}
+	
+	option = {
+		name = f93_adventure.1.a
+		custom_tooltip = f93_adventure.1.a.desc
+		hidden_effect = {
+			event_target:adventure_seeker = {
+				set_cooldown = f93_adventure_timer
+				unassign_leader = this
+				set_leader_flag = f93_went_on_an_adventure
+				set_timed_leader_flag = { flag = f93_is_on_adventure days = f93_adventure_timer }
+			}
+			set_timed_country_flag = { flag = f93_recent_adventure days = 1800 }
+		}
+	}
+	option = {
+		name = f93_adventure.1.b
+		custom_tooltip = f93_adventure.1.b.desc
+	}
+}
+
+#A Governor goes on a Governor Adventure on their Planet.
+planet_event = {
+	id = f93_adventure.2
+	title = f93_adventure.1.name
+	desc = f93_adventure.1.desc
+	picture = GFX_evt_bribery
+	is_triggered_only = yes
+	trigger = {
+		owner = { NOT = { has_country_flag = f93_recent_adventure } is_ai = no }
+		leader = {
+			OR = {
+				has_trait = leader_trait_adventurous_spirit
+				has_trait = leader_trait_adventurous_spirit_2
+				has_trait = leader_trait_adventurous_spirit_3
+			}
+		}
+	}
+	immediate = {
+		leader = {
+			save_event_target_as = adventure_seeker
+			set_variable_to_random_value = { which = f93_adventure_timer min = 270 max = 1080 rounded = yes }
+		}
+	}
+	
+	option = {
+		name = f93_adventure.1.a
+		hidden_effect = {
+			owner = { set_timed_country_flag = { flag = f93_recent_adventure days = 1800 } }
+		}
+		event_target:adventure_seeker = {
+			set_cooldown = f93_adventure_timer
+			hidden_effect = {
+				set_cooldown = 0
+				set_timed_leader_flag = { flag = f93_custom_cooldown days = f93_adventure_timer }
+				set_leader_flag = f93_went_on_an_adventure_as_governor
+				set_timed_leader_flag = { flag = f93_is_on_adventure days = f93_adventure_timer }
+			}
+		}
+	}
+	option = {
+		name = f93_adventure.1.b
+	}
+}
+
+#Prevents Reassigning leader after Adventure.2 Event Send a governor on an adventure
+leader_event = {
+	id = f93_adventure.3
+	hide_window = yes
+	is_triggered_only = yes
+	pre_triggers = { is_ai = no }
+	trigger = { has_leader_flag = f93_custom_cooldown is_ruler = no NOT = { has_leader_flag = f93_was_just_reassigned } }
+	immediate = {
+		if = {
+			limit = { planet = { exists = this } }
+			planet = { planet_event = { id = f93_adventure.4 days = 1 } }
+		}
+	}
+}
+
+#Reassigns leader to planet during Adventure.2 events or after adventure.1 events
+planet_event = {
+	id = f93_adventure.4
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		from = { set_cooldown = 0 set_leader_flag = f93_was_just_reassigned }
+		assign_leader = from
+		from = { remove_leader_flag = f93_was_just_reassigned }
+	}
+}
+#Reassigns leader to fleet after adventure.1 events
+fleet_event = {
+	id = f93_adventure.5
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		from = { set_cooldown = 0 set_leader_flag = f93_was_just_reassigned }
+		assign_leader = from
+		from = { remove_leader_flag = f93_was_just_reassigned }
+	}
+}
+
+# Adventure end preparation for governor adventure
+country_event = {
+	id = f93_adventure.94
+	hide_window = yes
+	is_triggered_only = yes
+	trigger = {
+		is_ai = no
+		any_owned_leader = {
+			has_leader_flag = f93_went_on_an_adventure_as_governor
+			NOT = { has_leader_flag = f93_is_on_adventure }
+		}
+	}
+	immediate = {
+		remove_leader_flag = f93_went_on_an_adventure_as_governor
+	}
+}
+# Adventure end preparation
+country_event = {
+	id = f93_adventure.95
+	hide_window = yes
+	is_triggered_only = yes
+	trigger = {
+		is_ai = no
+		any_owned_leader = {
+			has_leader_flag = f93_went_on_an_adventure
+			NOT = { has_leader_flag = f93_is_on_adventure }
+		}
+	}
+	immediate = {
+		remove_leader_flag = f93_went_on_an_adventure
+		random_owned_leader = {
+			limit = {
+				has_leader_flag = f93_went_on_an_adventure
+				NOT = { has_leader_flag = f93_is_on_adventure }
+			}
+			locked_random_list = {
+				5 = {
+					leader_event = { id = f93_adventure.96 }
+				}
+				5 = {
+					leader_event = { id = f93_adventure.97 }
+				}
+				15 = {
+					leader_event = { id = f93_adventure.98 }
+				}
+				75 = {
+					leader_event = { id = f93_adventure.99 }
+				}
+			}
+			if = { limit = { planet = { exists = this } } planet = { planet_event = { id = f93_adventure.4 } } }
+			if = { limit = { fleet = { exists = this } } planet = { fleet_event = { id = f93_adventure.5 } } }
+		}
+	}
+}
+# Adventure has ended in desertion
+leader_event = {
+	id = f93_adventure.96
+	title = f93_adventure_timer.96.name
+	desc = f93_adventure_timer.96.desc
+	picture = GFX_evt_worrying_signal
+	is_triggered_only = yes
+	immediate = {
+		create_message = {
+			type = LEADER_RETIRED
+			localization = LEADER_RETIRED_DESC
+			target = root
+		}
+		kill_leader = { show_notification = no }
+	}
+	option = {
+		name = OK
+	}
+}
+
+# Adventure has ended in death
+leader_event = {
+	id = f93_adventure.97
+	title = f93_adventure_timer.97.name
+	desc = f93_adventure_timer.97.desc
+	picture = GFX_evt_vivisection
+	is_triggered_only = yes
+	immediate = {
+		kill_leader = {}
+	}
+	option = {
+		name = OK
+	}
+}
+# Adventure has ended in failiour
+leader_event = {
+	id = f93_adventure.98
+	title = f93_adventure_timer.98.name
+	desc = f93_adventure_timer.98.desc
+	picture = GFX_evt_emergency_workers
+	is_triggered_only = yes
+	option = {
+		name = OK
+	}
+}
+
+# Adventure has ended in success
+leader_event = {
+	id = f93_adventure.99
+	title = f93_adventure_timer.99.name
+	desc = f93_adventure_timer.99.desc
+	picture = GFX_evt_friendly_enlightenment
+	is_triggered_only = yes
+	option = {
+		name = OK
+		locked_random_list = {
+			# 20% to get EXP
+			# 10% to get trait
+			# 5% to find rejuvination
+			# 40% to find unity/research
+			# 15% to find trait
+			# 10% chance to find 2 Xenomorph Armies
+			1 = {
+				add_skill = 1
+			}
+			5 = {
+				add_experience = 400
+			}
+			5 = {
+				add_experience = 450
+			}
+			5 = {
+				add_experience = 500
+			}
+			4 = {
+				add_experience = 550
+			}
+			2 = {
+				if = { limit = { NOT = { has_trait = leader_trait_brainslug } } add_trait = leader_trait_brainslug }
+				else = { add_age = -5 }
+			}
+			2 = {
+				if = { limit = { NOT = { has_trait = leader_trait_ancient_knowledge } } add_trait = leader_trait_ancient_knowledge }
+				else = { add_age = -5 }
+			}
+			2 = {
+				if = { limit = { NOT = { has_trait = leader_trait_erudite } } add_trait = leader_trait_erudite }
+				else = { add_age = -5 }
+			}
+			2 = {
+				if = { limit = { NOT = { has_trait = leader_trait_psioni } } add_trait = leader_trait_psioni }
+				else = { add_age = -5 }
+			}
+			2 = {
+				if = { limit = { NOT = { has_trait = leader_trait_ritualistic_implants_cyborg } } add_trait = leader_trait_ritualistic_implants_cyborg }
+				else = { add_age = -5 }
+			}
+			2 = {
+				if = { limit = { NOT = { has_trait = leader_trait_emotional_support_pet } } add_trait = leader_trait_emotional_support_pet }
+				else = { add_age = -5 }
+			}
+			2 = {
+				if = { limit = { NOT = { has_trait = leader_trait_resilient } } add_trait = leader_trait_resilient }
+				if = { limit = { has_trait = leader_trait_resilient } remove_trait = leader_trait_resilient add_trait = leader_trait_resilient2 }
+				else = { add_age = -5 }
+			}
+			1 = {
+				if = { limit = { NOT = { has_trait = leader_trait_eager } } add_trait = leader_trait_eager }
+				if = { limit = { has_trait = leader_trait_eager } remove_trait = leader_trait_eager add_trait = leader_trait_eager2 }
+				else = { add_age = -5 }
+			}
+			5 = {
+				if = { limit = { leader_age > 79 } add_age = -35 }
+				if = { limit = { leader_age > 74 } add_age = -30 }
+				if = { limit = { leader_age > 69 } add_age = -25 }
+				if = { limit = { leader_age > 64 } add_age = -15 }
+				if = { limit = { leader_age < 65 } add_age = -10 }
+			}
+			10 = {
+				owner = {
+					add_monthly_resource_mult = {
+						resource = unity
+						value = @tier2unityreward
+						min = @tier2unitymin
+						max = @tier2unitymax
+					}
+				}
+			}
+			10 = {
+				owner = {
+					add_monthly_resource_mult = {
+						resource = society_research
+						value = @tier2researchreward
+						min = @tier2researchmin
+						max = @tier2researchmax
+					}
+				}
+			}
+			10 = {
+				owner = {
+					add_monthly_resource_mult = {
+						resource = physics_research
+						value = @tier2researchreward
+						min = @tier2researchmin
+						max = @tier2researchmax
+					}
+				}
+			}
+			10 = {
+				owner = {
+					add_monthly_resource_mult = {
+						resource = engineering_research
+						value = @tier2researchreward
+						min = @tier2researchmin
+						max = @tier2researchmax
+					}
+				}
+			}
+			10 = {
+				owner = {
+					create_army_transport = {
+						army_type = xenomorph_army
+					}
+					create_army_transport = {
+						army_type = xenomorph_army
+					}
+				}
+			}
+		}
+	}
+}

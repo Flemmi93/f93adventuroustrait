@@ -1,0 +1,7 @@
+﻿l_french:
+#Events
+ f93_adventure.1.name: "§Y[adventure_seeker.GetName]§! requests leave"
+ f93_adventure.1.desc: "A Request has been made by §Y[adventure_seeker.GetName]§! to go on an §Gadventure§!$NEW_LINE$[adventure_seeker.GetHerHis] Stats:$TABBED_NEW_LINE$Class: §Y[adventure_seeker.GetClass]§!$TABBED_NEW_LINE$Age: [adventure_seeker.GetAge]"
+ f93_adventure.1.a: "Granted"
+ f93_adventure.1.b: "Denied"
+ f93_adventure.1.a.desc: "§Y[adventure_seeker.GetName]§! will be on away for £time£§Y270§! to §Y1080§! days.$NEW_LINE$Afterwards [adventure_seeker.GetSheHe] will return to [adventure_seeker.GetHerHis] post (does not work with Federation or Galacic Community)"
