@@ -19,7 +19,7 @@
  f93_adventurer_chain_desc: "Our Leader §Y[adventure_seeker.GetName]§! is a great adventurer, [adventure_seeker.GetSheHe] seek the thrill in the unknown and have left to see the galaxy.$f93_adventurer_chain_desc_extra$"
  f93_adventurer_chain_desc_extra: "$NEW_LINE$$NEW_LINE$The side activity of [adventure_seeker.GetHerHis] is: §Y[adventure_country.GetRealName]§!"
  f93_adventurer_chain_governor_title: "$f93_adventurer_chain_title$"
- f93_adventurer_chain_governor_desc: "Our Leader §Y[adventure_seeker.GetName]§! is a great adventurer, [adventure_seeker.GetSheHe] seek the thrill in the unknown and have left to see the galaxy."
+ f93_adventurer_chain_governor_desc: "Our Leader §Y[adventure_seeker.GetName]§! is a great adventurer, [adventure_seeker.GetSheHe] seek the thrill of the unknown and decided to dive deep into the ancient and mysterious parts of §Y[adventure_seeker.planet.GetName]§!."
  f93_adventurer_chain.poin.1.name: "Adventure Target"
  f93_adventurer_chain.poin.1.desc: "This system is where §Y[adventure_seeker.GetName]§! wants to go. Lets see what high jinks will ensue along the way."
  f93_adventure_steps: "Adventurer Progress"
@@ -27,3 +27,11 @@
  f93_ancient_map: "Adventure hook obtained"
  f93_adventuring_party: "Adventuring Party-Members"
  f93_loot_found: "Long lost treasure found"
+
+#Repeated Adventure Events
+ f93_adventure_hook_name: "A Mysterious Find"
+ f93_adventure_party_gather_name: "§Y[this.GetName]'s§! Party Assembeld"
+ f93_adventure_party_gather_desc: "Having contacted [this.GetHerHis] most trusted and skilled friends §Y[this.GetName]§! has gathered [this.GetHerHis] party and will set out shortly."
+
+# Unity Adventure
+ f93_unity_adventure.1.desc: "Having explored many old documents §Y[this.GetName]§! has discovered a hint at a great cultural treasure that has been lost for a long time now. This missing cultural milestone has long been considered a black mark on §Y[planet.GetName]§!. Great Honor will expect [this.GetHerHim] should [this.GetSheHe] be able to return with it or at least a defintive answer to it's wereabouts"

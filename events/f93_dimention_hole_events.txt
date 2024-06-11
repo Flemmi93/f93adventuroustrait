@@ -1,0 +1,191 @@
+namespace = f93_dimentional_hole
+#Dimentional Hole Preparation Event.
+#Special Event chain: Governor find a dimentional hole that seem to only works one way. if they jump in, there is an increased chance of death but also of a good reward
+leader_event = {
+	id = f93_dimentional_hole.11
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		set_leader_flag = f93_dimentional_hole
+		divide_variable = { which = f93_adventure_timer value = f93_adventure_steps }
+		round_variable = f93_adventure_timer
+		if = { # triggers events <7 for Governor adventures
+			limit = { check_variable = { which = f93_adventure_steps value = 6 } }
+			if  = {
+				limit = { check_variable = { which = f93_adventure_timer value >= 120 } } # Minimum 120 days (3 year adventure)
+				leader_event = { id = f93_dimentional_hole.1 days = 10 random = 110 } # The Adventure Hook 
+				leader_event = { id = f93_dimentional_hole.2 days = 120 random = 120 } # The Party Gatheres
+				leader_event = { id = f93_dimentional_hole.3 days = 240 random = 120 } # Adventure Progress 3
+				leader_event = { id = f93_dimentional_hole.4 days = 360 random = 120 } # Adventure Progress 4
+				leader_event = { id = f93_dimentional_hole.5 days = 480 random = 120 } # Adventure Progress 5
+				leader_event = { id = f93_dimentional_hole.6 days = 600 random = 120 } # The Reward Event
+			}
+			else_if = {
+				limit = { # Minimum 60 days
+					check_variable = { which = f93_adventure_timer value < 120 }
+					check_variable = { which = f93_adventure_timer value >= 60 }
+				}
+				leader_event = { id = f93_dimentional_hole.1 days = 10 random = 50 } # The Adventure Hook 
+				leader_event = { id = f93_dimentional_hole.2 days = 60 random = 60 } # The Party Gatheres
+				leader_event = { id = f93_dimentional_hole.3 days = 120 random = 60 } # Adventure Progress 3
+				leader_event = { id = f93_dimentional_hole.4 days = 180 random = 60 } # Adventure Progress 4
+				leader_event = { id = f93_dimentional_hole.5 days = 240 random = 60 } # Adventure Progress 5
+				leader_event = { id = f93_dimentional_hole.6 days = 300 random = 60 } # The Reward Event
+			}
+			else_if = {
+				limit = { check_variable = { which = f93_adventure_timer value < 60 } } # Minimum 45 days (9 month adventure)
+				leader_event = { id = f93_dimentional_hole.1 days = 10 random = 35 } # The Adventure Hook 
+				leader_event = { id = f93_dimentional_hole.2 days = 45 random = 45 } # The Party Gatheres
+				leader_event = { id = f93_dimentional_hole.3 days = 90 random = 45 } # Adventure Progress 3
+				leader_event = { id = f93_dimentional_hole.4 days = 135 random = 45 } # Adventure Progress 4
+				leader_event = { id = f93_dimentional_hole.5 days = 180 random = 45 } # Adventure Progress 5
+				leader_event = { id = f93_dimentional_hole.6 days = 225 random = 45 } # The Reward Event
+			}
+		}
+		if = { # triggers events >7 for general adventures
+			limit = { check_variable = { which = f93_adventure_steps value = 4 } }
+			if  = {
+				limit = { check_variable = { which = f93_adventure_timer value >= 180 } } # Minimum 180 days (3 year adventure)
+				leader_event = { id = f93_dimentional_hole.7 days = 10 random = 165 } # Adventure Progress 1
+				leader_event = { id = f93_dimentional_hole.8 days = 180 random = 180 } # Adventure Progress 2
+				leader_event = { id = f93_dimentional_hole.9 days = 360 random = 180 } # Adventure Progress 3
+				leader_event = { id = f93_dimentional_hole.10 days = 540 random = 180 } # Adventure Progress 4
+			}
+			else_if = {
+				limit = { # Minimum 90 days
+					check_variable = { which = f93_adventure_timer value < 180 }
+					check_variable = { which = f93_adventure_timer value >= 90 }
+				}
+				leader_event = { id = f93_dimentional_hole.7 days = 10 random = 75 } # Adventure Progress 1
+				leader_event = { id = f93_dimentional_hole.8 days = 90 random = 90 } # Adventure Progress 2
+				leader_event = { id = f93_dimentional_hole.9 days = 180 random = 90 } # Adventure Progress 3
+				leader_event = { id = f93_dimentional_hole.10 days = 270 random = 90 } # Adventure Progress 4
+			}
+			else_if = {
+				limit = { check_variable = { which = f93_adventure_timer value < 90 } } # Minimum 45 days (9 month adventure)
+				leader_event = { id = f93_dimentional_hole.7 days = 10 random = 65 } # Adventure Progress 1
+				leader_event = { id = f93_dimentional_hole.8 days = 67 random = 67 } # Adventure Progress 2
+				leader_event = { id = f93_dimentional_hole.9 days = 135 random = 67 } # Adventure Progress 3
+				leader_event = { id = f93_dimentional_hole.10 days = 202 random = 67 } # Adventure Progress 4
+			}
+		}
+	}
+}
+
+leader_event = {
+	id = f93_dimentional_hole.1
+	title = f93_adventure_hook_name
+	desc = f93_dimentional_hole.1.desc
+	picture = GFX_evt_obelisk_tourists
+	is_triggered_only = yes
+	option = {
+		name = OK
+		owner = {
+			add_event_chain_counter = { event_chain = f93_adventurer_chain_governor counter = f93_ancient_map amount = 1 }
+			add_event_chain_counter = { event_chain = f93_adventurer_chain_governor counter = f93_adventure_steps amount = 1 }
+		}
+	}
+}
+
+leader_event = {
+	id = f93_dimentional_hole.2
+	title = f93_adventure_party_gather_name
+	desc = f93_adventure_party_gather_desc
+	picture = GFX_evt_acquire_asset
+	is_triggered_only = yes
+	option = {
+		name = fircon.2625.a
+		owner = {
+			add_event_chain_counter = { event_chain = f93_adventurer_chain_governor counter = f93_adventure_steps amount = 1 }
+			add_event_chain_counter = { event_chain = f93_adventurer_chain_governor counter = f93_adventuring_party amount = 2 }
+		}
+	}
+}
+
+leader_event = {
+	id = f93_dimentional_hole.3
+	title = f93_dimentional_hole.3.name
+	desc = f93_dimentional_hole.3.desc
+	picture = GFX_evt_obelisk_tourists
+	is_triggered_only = yes
+	option = {
+		name = OK
+	}
+}
+
+leader_event = {
+	id = f93_dimentional_hole.4
+	title = f93_dimentional_hole.4.name
+	desc = f93_dimentional_hole.4.desc
+	picture = GFX_evt_obelisk_tourists
+	is_triggered_only = yes
+	option = {
+		name = OK
+	}
+}
+
+leader_event = {
+	id = f93_dimentional_hole.5
+	title = f93_dimentional_hole.5.name
+	desc = f93_dimentional_hole.5.desc
+	picture = GFX_evt_obelisk_tourists
+	is_triggered_only = yes
+	option = {
+		name = OK
+	}
+}
+
+leader_event = {
+	id = f93_dimentional_hole.6
+	title = f93_dimentional_hole.6.name
+	desc = f93_dimentional_hole.6.desc
+	picture = GFX_evt_obelisk_tourists
+	is_triggered_only = yes
+	option = {
+		name = OK
+	}
+}
+
+leader_event = {
+	id = f93_dimentional_hole.7
+	title = f93_dimentional_hole.7.name
+	desc = f93_dimentional_hole.7.desc
+	picture = GFX_evt_obelisk_tourists
+	is_triggered_only = yes
+	option = {
+		name = OK
+	}
+}
+
+leader_event = {
+	id = f93_dimentional_hole.8
+	title = f93_dimentional_hole.8.name
+	desc = f93_dimentional_hole.8.desc
+	picture = GFX_evt_obelisk_tourists
+	is_triggered_only = yes
+	option = {
+		name = OK
+	}
+}
+
+leader_event = {
+	id = f93_dimentional_hole.9
+	title = f93_dimentional_hole.9.name
+	desc = f93_dimentional_hole.9.desc
+	picture = GFX_evt_obelisk_tourists
+	is_triggered_only = yes
+	option = {
+		name = OK
+	}
+}
+
+leader_event = {
+	id = f93_dimentional_hole.10
+	title = f93_dimentional_hole.10.name
+	desc = f93_dimentional_hole.103.desc
+	picture = GFX_evt_obelisk_tourists
+	is_triggered_only = yes
+	option = {
+		name = OK
+	}
+}
