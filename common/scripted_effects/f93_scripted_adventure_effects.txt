@@ -1,0 +1,244 @@
+#Marks 4 Random System in a vague line for a type of Adventure, these do not have to be reached by and fleet your own.
+find_4_adventure_POIs_random = {
+	if = {
+		limit = { event_target:adventure_seeker = { exists = planet } }
+		event_target:adventure_seeker = { planet.solar_system = { save_event_target_as = adventurer_starting_location } }
+	}
+	else_if = {
+		limit = { event_target:adventure_seeker = { exists = fleet } }
+		event_target:adventure_seeker = { fleet.solar_system = { save_event_target_as = adventurer_starting_location } }
+	}
+	else = {
+		capital_scope.solar_system = { save_event_target_as = adventurer_starting_location }
+	}
+	random_system = {
+		limit = {
+			distance = {
+				source = event_target:adventurer_starting_location
+				type = hyperlane
+				min_jumps = 16
+				max_jumps = 20
+			}
+			NOT = { has_star_flag = is_part_of_adventure@event_target:adventure_seeker }
+		}
+		save_event_target_as = adventure_target_system_4
+		set_star_flag = is_part_of_adventure@event_target:adventure_seeker
+	
+		closest_system = {
+			limit = {
+				distance = {
+					source = event_target:adventurer_starting_location
+					type = hyperlane
+					max_jumps = 12
+				}
+				NOT = { has_star_flag = is_part_of_adventure@event_target:adventure_seeker }
+			}
+			save_event_target_as = adventure_target_system_3
+			set_star_flag = is_part_of_adventure@event_target:adventure_seeker
+		}
+		closest_system = {
+			limit = {
+				distance = {
+					source = event_target:adventurer_starting_location
+					type = hyperlane
+					max_jumps = 8
+				}
+				NOT = { has_star_flag = is_part_of_adventure@event_target:adventure_seeker }
+			}
+			save_event_target_as = adventure_target_system_2
+			set_star_flag = is_part_of_adventure@event_target:adventure_seeker
+		}
+		closest_system = {
+			limit = {
+				distance = {
+					source = event_target:adventurer_starting_location
+					type = hyperlane
+					max_jumps = 4
+				}
+				NOT = { has_star_flag = is_part_of_adventure@event_target:adventure_seeker }
+			}
+			save_event_target_as = adventure_target_system_1
+			set_star_flag = is_part_of_adventure@event_target:adventure_seeker
+		}
+	}
+	if = {
+		limit = {
+			has_event_chain = f93_adventurer_chain
+		}
+		create_point_of_interest = {
+			id = adventure_target_system_poi.1
+			name = "adventure_target_system_1_poi"
+			desc = "adventure_target_system_poi_desc"
+			event_chain = "f93_adventurer_chain"
+			location = event_target:adventure_target_system_1
+		}
+		create_point_of_interest = {
+			id = adventure_target_system_poi.2
+			name = "adventure_target_system_2_poi"
+			desc = "adventure_target_system_poi_desc"
+			event_chain = "f93_adventurer_chain"
+			location = event_target:adventure_target_system_2
+		}
+		create_point_of_interest = {
+			id = adventure_target_system_poi.3
+			name = "adventure_target_system_3_poi"
+			desc = "adventure_target_system_poi_desc"
+			event_chain = "f93_adventurer_chain"
+			location = event_target:adventure_target_system_3
+		}
+		create_point_of_interest = {
+			id = adventure_target_system_poi.4
+			name = "adventure_target_system_4_poi"
+			desc = "adventure_target_system_poi_desc"
+			event_chain = "f93_adventurer_chain"
+			location = event_target:adventure_target_system_4
+		}
+	}
+}
+#Location you have to rescue your adventurer at, fleets should always be able to reach these locations
+f93_rescue_lost_adventurer = {
+	if = {
+		limit = {
+			any_rim_system = {
+				any_system_planet = { habitability = { who = this value > 0 } }
+				has_access_fleet = yes
+			}
+		}
+		random_rim_system = {
+			limit = {
+				any_system_planet = { habitability = { who = this value > 0 } }
+				has_access_fleet = yes
+			}
+			random_system_planet = {
+				limit = { any_system_planet = { habitability = { who = this value > 0 } } }
+				save_event_target_as = adventure_target_system
+			}
+		}
+		create_point_of_interest = {
+			id = f93_adventurer_chain.1
+			name = f93_adventurer_chain_rescue.name
+			desc = f93_adventurer_chain_rescue.desc
+			event_chain = f93_adventurer_chain
+			location = event_target:adventure_target_system
+		}
+	}
+	else = {
+		random_rim_system = {
+			limit = {
+				has_access_fleet = yes
+			}
+			owner = { NOR = { is_country_type = fallen_empire is_country_type = awakened_fallen_empire } }
+			random_system_planet = {
+				save_event_target_as = adventure_target_system
+			}
+		}
+		create_point_of_interest = {
+			id = f93_adventurer_chain.1
+			name = f93_adventurer_chain_rescue.name
+			desc = f93_adventurer_chain_rescue.desc
+			event_chain = f93_adventurer_chain
+			location = event_target:adventure_target_system
+		}
+	}
+}
+#The Governors own planet to rescue the governor from his own misfortune
+f93_rescue_lost_governor = {
+	event_target:adventure_seeker = { planet = { save_event_target_as = adventure_target_system } }
+	create_point_of_interest = {
+		id = f93_adventurer_chain.1
+		name = f93_adventurer_chain_rescue.name
+		desc = f93_adventurer_chain_rescue.desc
+		event_chain = f93_adventurer_chain
+		location = event_target:adventure_target_system
+	}
+}
+f93_string_country_creation_effect = {
+	create_country = {
+		name = "Fun side activity"
+		ignore_initial_colony_error = yes
+		auto_delete = no
+		type = f93_nothing
+		effect = {
+			save_global_event_target_as = adventure_country
+		}
+	}
+}
+bonus_counter_for_fun_variable_effect = {
+	if = {
+		limit = {
+			or = {
+				has_ethic = ethic_xenophile
+				has_ethic = ethic_fanatic_xenophile
+			}
+		}
+		event_target:adventure_country = {
+			set_name = "Xeno friends made"
+		}
+	}
+	if = {
+		limit = {
+			or = {
+				has_ethic = ethic_xenophobe
+				has_ethic = ethic_fanatic_xenophobe
+			}
+		}
+		event_target:adventure_country = {
+			set_name = "Xenos offended"
+		}
+	}
+	if = {
+		limit = {
+			or = {
+				has_ethic = ethic_pacifist
+				has_ethic = ethic_fanatic_pacifist
+			}
+		}
+		event_target:adventure_country = {
+			set_name = "Conflicts resolved without violence"
+		}
+	}
+	if = {
+		limit = {
+			or = {
+				has_ethic = ethic_militarist
+				has_ethic = ethic_fanatic_militarist
+			}
+		}
+		event_target:adventure_country = {
+			set_name = "Enemies slain"
+		}
+	}
+	if = {
+		limit = {
+			or = {
+				has_ethic = ethic_egalitarian
+				has_ethic = ethic_fanatic_egalitarian
+			}
+		}
+		event_target:adventure_country = {
+			set_name = "People liberated"
+		}
+	}
+	if = {
+		limit = {
+			or = {
+				has_ethic = ethic_spiritualist
+				has_ethic = ethic_fanatic_spiritualist
+			}
+		}
+		event_target:adventure_country = {
+			set_name = "Converts made"
+		}
+	}
+	if = {
+		limit = {
+			or = {
+				has_ethic = ethic_materialist
+				has_ethic = ethic_fanatic_materialist
+			}
+		}
+		event_target:adventure_country = {
+			set_name = "Discoveries Made"
+		}
+	}
+}

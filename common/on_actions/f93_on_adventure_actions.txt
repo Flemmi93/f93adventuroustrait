@@ -1,4 +1,9 @@
 
+on_game_start_country = {
+	events = {
+		f93_adventure.2
+	}
+}
 # Scope: Leader (just before unassignment)
 # Fires if a leader is unassigned from their position for any reason (including being assigned elsewhere)
 on_leader_unassigned = {
@@ -6,11 +11,9 @@ on_leader_unassigned = {
 		f93_adventure.3
 	}
 }
-
 on_monthly_pulse_country = {
 	events = {
 		f93_adventure.1
-		f93_adventure.2
 		f93_adventure.94
 		f93_adventure.95
 	}

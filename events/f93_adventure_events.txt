@@ -17,32 +17,39 @@ country_event = {
 	title = f93_adventure.1.name
 	desc = f93_adventure.1.desc
 	picture = GFX_evt_bribery
-	is_triggered_only = yes
-	mean_time_to_happen = { months = 6 }
+	# is_triggered_only = yes
+	mean_time_to_happen = { days = 180 }
 	trigger = {
 		NOT = { has_country_flag = f93_recent_adventure }
 		is_ai = no
 		any_owned_leader = {
 			is_councilor = no
-			has_trait_tier1or2or3 = leader_trait_adventurous_spirit
+			has_trait_tier1or2or3 = { TRAIT = leader_trait_adventurous_spirit }
 		}
 	}
 	immediate = {
 		random_owned_leader = {
 			limit = {
 				is_councilor = no
-				has_trait_tier1or2or3 = leader_trait_adventurous_spirit
+				has_trait_tier1or2or3 = { TRAIT = leader_trait_adventurous_spirit }
 			}
 			set_variable_to_random_value = { which = f93_adventure_timer min = 270 max = 1080 rounded = yes } #between 9 months and 3 years
 			save_event_target_as = adventure_seeker
 		}
 	}
 	
-	option = {
+	option = { # this option shows up when you have a regular Leader
+		trigger = { event_target:adventure_seeker = { NOT = { exists = planet } } }
 		name = f93_adventure.1.a
 		custom_tooltip = f93_adventure.1.a.desc
+		begin_event_chain = {
+			event_chain = f93_adventurer_chain
+			target = event_target:adventure_seeker
+		}
 		hidden_effect = {
+			find_4_adventure_POIs_random = yes
 			event_target:adventure_seeker = {
+				bonus_counter_for_fun_variable_effect = yes
 				set_cooldown = f93_adventure_timer
 				unassign_leader = this
 				set_leader_flag = f93_went_on_an_adventure # This flag is used at the end to know when a leader that went adventuring has returned. (event f93_adventure.95)
@@ -51,38 +58,17 @@ country_event = {
 			set_timed_country_flag = { flag = f93_recent_adventure days = 1800 }
 		}
 	}
-	option = {
-		name = f93_adventure.1.b
-		custom_tooltip = f93_adventure.1.b.desc
-	}
-}
-
-#A Governor goes on a Governor Adventure on their Planet.
-planet_event = {
-	id = f93_adventure.2
-	title = f93_adventure.1.name
-	desc = f93_adventure.1.desc
-	picture = GFX_evt_bribery
-	is_triggered_only = yes
-	mean_time_to_happen = { months = 6 }
-	trigger = {
-		owner = { NOT = { has_country_flag = f93_recent_adventure } is_ai = no }
-		leader = {
-			is_councilor = no # by removing this line Governors who are also Councilors will be able to go on an adventure.
-			has_trait_tier1or2or3 = leader_trait_adventurous_spirit
+	option = { # This option shows up when its a governor
+		trigger = { event_target:adventure_seeker = { exists = planet } }
+		name = f93_adventure.2.a
+		custom_tooltip = f93_adventure.1.a.desc
+		begin_event_chain = {
+			event_chain = f93_adventurer_chain_governor
+			target = event_target:adventure_seeker
 		}
-	}
-	immediate = {
-		leader = {
-			save_event_target_as = adventure_seeker
-			set_variable_to_random_value = { which = f93_adventure_timer min = 270 max = 1080 rounded = yes }
-		}
-	}
-	
-	option = {
-		name = f93_adventure.1.a
 		hidden_effect = {
 			owner = { set_timed_country_flag = { flag = f93_recent_adventure days = 1800 } }
+			add_event_chain_counter = { event_chain = f93_adventurer_chain_governor counter = f93_adventuring_party amount = 1 }
 		}
 		event_target:adventure_seeker = {
 			set_cooldown = f93_adventure_timer
@@ -96,8 +82,60 @@ planet_event = {
 	}
 	option = {
 		name = f93_adventure.1.b
+		custom_tooltip = f93_adventure.1.b.desc
 	}
 }
+
+country_event = {
+	id = f93_adventure.2
+	is_triggered_only = yes
+	fire_only_once = yes
+	hide_window = yes
+	immediate = { f93_string_country_creation_effect = yes }
+}
+
+# #A Governor goes on a Governor Adventure on their Planet.
+# #is now unused for the time being
+# planet_event = {
+# 	id = f93_adventure.2
+# 	title = f93_adventure.1.name
+# 	desc = f93_adventure.1.desc
+# 	picture = GFX_evt_bribery
+# 	# is_triggered_only = yes
+# 	mean_time_to_happen = { days = 180 }
+# 	trigger = {
+# 		owner = { NOT = { has_country_flag = f93_recent_adventure } is_ai = no }
+# 		leader = {
+# 			is_councilor = no # by removing this line Governors who are also Councilors will be able to go on an adventure.
+# 			has_trait_tier1or2or3 = { TRAIT = leader_trait_adventurous_spirit }
+# 		}
+# 	}
+# 	immediate = {
+# 		leader = {
+# 			save_event_target_as = adventure_seeker
+# 			set_variable_to_random_value = { which = f93_adventure_timer min = 270 max = 1080 rounded = yes }
+# 		}
+# 	}
+	
+# 	option = {
+# 		name = f93_adventure.1.a
+# 		hidden_effect = {
+# 			owner = { set_timed_country_flag = { flag = f93_recent_adventure days = 1800 } }
+# 		}
+# 		event_target:adventure_seeker = {
+# 			set_cooldown = f93_adventure_timer
+# 			hidden_effect = {
+# 				set_cooldown = 0
+# 				set_timed_leader_flag = { flag = f93_custom_cooldown days = f93_adventure_timer }
+# 				set_leader_flag = f93_went_on_an_adventure_as_governor
+# 				set_timed_leader_flag = { flag = f93_is_on_adventure days = f93_adventure_timer }
+# 			}
+# 		}
+# 	}
+# 	option = {
+# 		name = f93_adventure.1.b
+# 	}
+# }
 
 #Prevents Reassigning leader after Adventure.2 Event Send a governor on an adventure
 leader_event = {
@@ -252,6 +290,7 @@ leader_event = {
 	is_triggered_only = yes
 	option = {
 		name = OK
+		reroll_random = yes
 		locked_random_list = {
 			# 20% to get EXP
 			# 10% to get trait

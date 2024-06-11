@@ -1,0 +1,45 @@
+# Event chains.
+
+# counter, counters that can be increased and checked from effects and triggers
+#
+# Localization needed:
+# event_chain_chainnkey_title, a title to show in the situation log.
+# event_chain_chainnkey_desc, a description to show in the situation log.
+
+f93_adventurer_chain = {
+	icon = "gfx/interface/icons/icon_leader.dds"
+	picture = GFX_evt_knights
+	counter = {
+		f93_adventure_steps = {
+			max = 4
+		}
+		f93_bonus_counter_for_fun = {
+		}
+	}
+
+	abort_trigger = {
+		NOT = { exists = event_target:adventure_seeker }
+	}
+}
+f93_adventurer_chain_governor = {
+	icon = "gfx/interface/icons/icon_leader.dds"
+	picture = GFX_evt_knights
+	counter = {
+		f93_ancient_map = {
+			max = 1
+		}
+		f93_adventuring_party = {
+			max = 3
+		}
+		f93_adventure_steps = {
+			max = 6
+		}
+		f93_loot_found = {
+			max = 1
+		}
+	}
+
+	abort_trigger = {
+		NOT = { exists = event_target:adventure_seeker }
+	}
+}

@@ -1,0 +1,24 @@
+f93_nothing = {
+    playable = no							#if this type is available for players. used when listing countries for hot-joining players
+	has_pulse_events = no					#if this type gets checked for country-specific pulse events from on_action
+	has_deficits = no						#if this type suffers from resource deficits
+	has_capital = yes						#default is yes, capital always exists but toggling this no hides any mention of the capital planet being a capital.
+	enforces_borders = no					#default is yes, if the country doesn't enforce it's borders people are always free to enter.
+	can_planets_be_attacked = no			#default yes, if no then planets owned by this country type can not be attacked
+	orbital_bombardment = no				#default yes, does orbital bombardment
+	share_communications = no				#default yes, decides if they share communciations with anyone you have contact with
+	show_in_contacts_list = no				#default yes, whether to show an entry in the contacts list
+	government = no							#default yes, if yes then the country has a government
+    observable = no						    #Fairly self explanatory. Will not show up in list of observable countries, and cannot be tagged to as observer.
+    faction = {
+        auto_delete = no
+    }
+    ai = {
+        enabled = no
+    }
+	modules = {
+		exclusive_diplomacy_module = {} # Nothing is allowed, but we need this for relationships.
+		all_technology_module = {}
+		standard_event_module = {}
+	}
+}
