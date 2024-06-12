@@ -10,7 +10,7 @@
 # Ecumenopolice and Habitat can not have expeditions.
 
 namespace = f93_adventure
-
+@use_invisible_system = 0 # 1 for ON and 0 for OFF
 #A Leader goes on a Adventure away from their posts, includes governors
 country_event = {
 	id = f93_adventure.1
@@ -28,6 +28,7 @@ country_event = {
 		}
 	}
 	immediate = {
+		f93_string_country_creation_effect = yes
 		random_owned_leader = {
 			limit = {
 				is_councilor = no
@@ -90,9 +91,23 @@ country_event = {
 	after = {
 		hidden_effect = {
 			event_target:adventure_seeker = {
+				set_variable = { which = use_invisible_system value = @use_invisible_system } # switch for invisibile system at the top of the file
+				if = {
+					limit = {
+						or = {
+							has_leader_flag = f93_went_on_an_adventure_as_governor
+							has_leader_flag = f93_went_on_an_adventure
+						}
+						check_variable = { which = use_invisible_system value = 0 } # switch for invisibile system at the top of the file
+					}
+					leader_event = { id = f93_adventure.2 }
+				}
 				if = {
 					#If the Leader is on a regular adventure the following things can happen. Some events should alsways be possible, especialy those that only give resource / exp rewards
-					limit = { has_leader_flag = f93_went_on_an_adventure_as_governor } 
+					limit = {
+						has_leader_flag = f93_went_on_an_adventure_as_governor
+						check_variable = { which = use_invisible_system value = 1 } # switch for invisibile system at the top of the file
+					} 
 					locked_random_list = {
 						5 = {
 							leader_event = { id = f93_science_adventure.11 }
@@ -143,7 +158,10 @@ country_event = {
 				}
 				if = {
 					#If the Leader is on a governor type adventure the following things can happen. Some events should alsways be possible, especialy those that only give resource / exp rewards
-					limit = { has_leader_flag = f93_went_on_an_adventure } 
+					limit = {
+						has_leader_flag = f93_went_on_an_adventure
+						check_variable = { which = use_invisible_system value = 1 } # switch for invisibile system at the top of the file
+					} 
 					random_list = {
 						10 = {
 							leader_event = { id = f93_foreign_treasure.11 }
@@ -180,18 +198,17 @@ country_event = {
 	}
 }
 
-country_event = {
+#Altternative Insiible system.
+leader_event = {
 	id = f93_adventure.2
 	is_triggered_only = yes
 	fire_only_once = yes
 	hide_window = yes
 	immediate = {
-		f93_string_country_creation_effect = yes
-		set_variable = { which = f93_dimentional_hole value = 0 }
 	}
 }
 
-#Prevents Reassigning leader after Adventure.2 Event Send a governor on an adventure
+#Prevents Reassigning leader after Adventure.1 Event Send a governor on an adventure
 leader_event = {
 	id = f93_adventure.3
 	hide_window = yes
@@ -226,6 +243,134 @@ fleet_event = {
 		from = { set_cooldown = 0 set_leader_flag = f93_was_just_reassigned }
 		assign_leader = from
 		from = { remove_leader_flag = f93_was_just_reassigned }
+	}
+}
+
+
+# General Events for invisible progress
+#Progress on f93_adventure_steps counter by 1
+leader_event = {
+	id = f93_adventure.6
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		owner = {
+			if = {
+				limit = {
+					has_event_chain = f93_adventurer_chain
+					NOT = { has_completed_event_chain_counter = { event_chain = f93_adventurer_chain counter = f93_adventure_steps } }
+				}
+				add_event_chain_counter = { event_chain = f93_adventurer_chain counter = f93_adventure_steps amount = 1 }
+			}
+			if = {
+				limit = {
+					has_event_chain = f93_adventurer_chain_governor
+					NOT = { has_completed_event_chain_counter = { event_chain = f93_adventurer_chain_governor counter = f93_adventure_steps } }
+				}
+				add_event_chain_counter = { event_chain = f93_adventurer_chain_governor counter = f93_adventure_steps amount = 1 }
+			}
+		}
+	}
+}
+
+#Progress on f93_ancient_map counter by 1
+leader_event = {
+	id = f93_adventure.7
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		owner = {
+			if = {
+				limit = {
+					has_event_chain = f93_adventurer_chain_governor
+					NOT = { has_completed_event_chain_counter = { event_chain = f93_adventurer_chain_governor counter = f93_ancient_map } }
+				}
+				add_event_chain_counter = { event_chain = f93_adventurer_chain_governor counter = f93_ancient_map amount = 1 }
+			}
+		}
+	}
+}
+#Progress on f93_adventuring_party counter by 1
+leader_event = {
+	id = f93_adventure.8
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		owner = {
+			if = {
+				limit = {
+					has_event_chain = f93_adventurer_chain_governor
+					NOT = { has_completed_event_chain_counter = { event_chain = f93_adventurer_chain_governor counter = f93_adventuring_party } }
+				}
+				add_event_chain_counter = { event_chain = f93_adventurer_chain_governor counter = f93_adventuring_party amount = 1 }
+			}
+		}
+	}
+}
+#Progress on f93_loot_found counter by 1
+leader_event = {
+	id = f93_adventure.9
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		owner = {
+			if = {
+				limit = {
+					has_event_chain = f93_adventurer_chain_governor
+					NOT = { has_completed_event_chain_counter = { event_chain = f93_adventurer_chain_governor counter = f93_loot_found } }
+				}
+				add_event_chain_counter = { event_chain = f93_adventurer_chain_governor counter = f93_loot_found amount = 1 }
+			}
+		}
+	}
+}
+
+#Progress on POIs, removes the "closest" one left
+leader_event = {
+	id = f93_adventure.10
+	hide_window = yes
+	is_triggered_only = yes
+	trigger = {
+		owner = {
+			or = {
+				has_point_of_interest = { poi = adventure_target_system_poi.1 }
+				has_point_of_interest = { poi = adventure_target_system_poi.2 }
+				has_point_of_interest = { poi = adventure_target_system_poi.3 }
+				has_point_of_interest = { poi = adventure_target_system_poi.4 }
+			}
+		}
+	}
+	immediate = {
+		owner = {
+			if = {
+				limit = {
+					has_event_chain = f93_adventurer_chain
+					has_point_of_interest = { poi = adventure_target_system_poi.1 }
+				}
+				remove_point_of_interest = adventure_target_system_poi.1
+			}
+			else_if = {
+				limit = {
+					has_event_chain = f93_adventurer_chain
+					has_point_of_interest = { poi = adventure_target_system_poi.2 }
+				}
+				remove_point_of_interest = adventure_target_system_poi.2
+			}
+			else_if = {
+				limit = {
+					has_event_chain = f93_adventurer_chain
+					has_point_of_interest = { poi = adventure_target_system_poi.3 }
+				}
+				remove_point_of_interest = adventure_target_system_poi.3
+			}
+			else = {
+				limit = {
+					has_event_chain = f93_adventurer_chain
+					has_point_of_interest = { poi = adventure_target_system_poi.4 }
+				}
+				remove_point_of_interest = adventure_target_system_poi.4
+			}
+		}
 	}
 }
 
